@@ -1,4 +1,4 @@
-var list = getDataList();
+var list = getDataList("team3");
 
 //<!-- INIT DISPLAY -->
 $("#TotalTitle").hide();
@@ -66,7 +66,6 @@ function ShowList(list) {
 //<!-- SHOW DIALOG -->
 function ShowPopup(item) {
   // debugger;
-
   // resut title color
   $("#panel-header").removeClass("bg-primary");
   $("#panel-header").removeClass("bg-success");
@@ -148,30 +147,45 @@ $("#ImportButton").click(function (e) {
 // [Exercise 2] Save Action
 $("#SaveButton").click(function (e) {
   e.preventDefault();
+  list = getDataList("team3");
   debugger;
+  if (CurrentMode == AppMode.EDIT_MODE) {
+    item1 = list.find(item => item.id === currentId);
+    item1.Date = $("#date").val();
+    item1.Name = $("#name").val();
+    item1.Maker = $("#maker").val();
+    item1.Price = $("#price").val();
+    item1.Amount = $("#amount").val();
+    item1.Location = $("#location").val();
 
-  generateUniqueId();
-  var dateValue = $("#date").val();
-  var nameValue = $("#name").val();
-  var makerValue = $("#maker").val();
-  var priceValue = $("#price").val();
-  var amountValue = $("#amount").val();
-  var locationValue = $("#location").val();
+  }
+  else {
+    generateUniqueId();
+    var dateValue = $("#date").val();
+    var nameValue = $("#name").val();
+    var makerValue = $("#maker").val();
+    var priceValue = $("#price").val();
+    var amountValue = $("#amount").val();
+    var locationValue = $("#location").val();
 
-  const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
-  // alert("You must implement this function [Exercise 2]");
-  list.push(product)
+    const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
+    // alert("You must implement this function [Exercise 2]");
+    list.push(product)
+  }
+  
   ShowList(list);
   setDataList(list, "team3")
 });
 var isEdit = false;
+var currentId;
 // [Exercise 3] Edit Action
 function editProduct(id) {
+  list = getDataList("team3");
   debugger;
-
+  currentId = id;
   CurrentMode = AppMode.EDIT_MODE;
-  ShowPopup(item1);
-  alert("You must implement this function [Exercise 3]");
+  let itemIndex = list.findIndex(item => item.id === id);
+  ShowPopup(list[itemIndex]);
 }
 
 // [Exercise 4] Delete Action
