@@ -158,7 +158,7 @@ $("#SaveButton").click(function (e) {
   ShowList(list);
   setDataList(list, "team3")
 });
-
+var isEdit = false;
 // [Exercise 3] Edit Action
 function editProduct(id) {
   debugger;
