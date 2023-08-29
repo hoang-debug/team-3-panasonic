@@ -63,7 +63,7 @@ function ShowList(list) {
 
 //<!-- SHOW DIALOG -->
 function ShowPopup(item) {
-  debugger;
+  // debugger;
 
   // resut title color
   $("#panel-header").removeClass("bg-primary");
@@ -128,24 +128,38 @@ function GetTodayWithFormat() {
     ("0" + date.getDate()).slice(-2)
   );
 }
-
+var dateValue;
+var nameValue;
+var makerValue;
+var priceValue;
+var amountValue;
+var locationValue;
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
   e.preventDefault();
-  debugger;
+  // debugger;
 
   CurrentMode = AppMode.ADD_MODE;
   ShowPopup();
-  alert("You must implement this function [Exercise 1]");
+  // alert("You must implement this function [Exercise 1]");
 });
 
 // [Exercise 2] Save Action
 $("#SaveButton").click(function (e) {
   e.preventDefault();
   debugger;
+  var dateValue = $("#date").val();
+  var nameValue = $("#name").val();
+  var makerValue = $("#maker").val();
+  var priceValue = $("#price").val();
+  var amountValue = $("#amount").val();
+  var locationValue = $("#location").val();
 
-  alert("You must implement this function [Exercise 2]");
+  const product = new Product(1, dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
+  // alert("You must implement this function [Exercise 2]");
+  list.push(product)
+  ShowList(list);
 });
 
 // [Exercise 3] Edit Action
