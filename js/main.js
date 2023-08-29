@@ -243,7 +243,7 @@ var currentId;
 // [Exercise 3] Edit Action
 function editProduct(id) {
   list = getDataList("team3");
-  debugger;
+  // debugger;
   currentId = id;
   CurrentMode = AppMode.EDIT_MODE;
   const indexToDelete = list.findIndex(item => item.Id === id);
