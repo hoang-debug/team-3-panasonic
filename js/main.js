@@ -120,6 +120,10 @@ function ShowPopup(item) {
   }
 }
 
+function generateUniqueId() {
+  return Date.now().toString();
+}
+
 function GetTodayWithFormat() {
   const date = new Date();
   return (
@@ -145,6 +149,8 @@ $("#ImportButton").click(function (e) {
 $("#SaveButton").click(function (e) {
   e.preventDefault();
   debugger;
+
+  generateUniqueId();
   var dateValue = $("#date").val();
   var nameValue = $("#name").val();
   var makerValue = $("#maker").val();
@@ -170,11 +176,11 @@ function editProduct(id) {
 
 // [Exercise 4] Delete Action
 function deleteProduct(id) {
-  debugger;
-  // let text = "Are you sure to delete?";
-  // if (!confirm(text)) {
-  //   return 0;
-  // }
+  // debugger;
+  let text = "Are you sure to delete?";
+  if (!confirm(text)) {
+    return 0;
+  }
 
   alert("You must implement this function [Exercise 4]");
 }
