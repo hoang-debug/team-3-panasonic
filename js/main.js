@@ -250,13 +250,46 @@ function deleteProduct(id) {
 
 // [Exercise 5] Export Action
 function exportProduct(id) {
-  debugger;
+  // debugger;
 
   CurrentMode = AppMode.EXPORT_MODE;
 
   // Show pop up
   ShowPopup(item1);
-  alert("You must implement this function [Exercise 5]");
+  const product = list.find((item) => item.Id === id);
+  // Check if the product is found
+  if (product) {
+    // Display the export dialog
+    ShowPopup(product);
+
+    // Bind the "Export" button click event
+    $("#SaveButton").off("click").on("click", function (e) {
+      e.preventDefault();
+
+      // Get the export quantity entered by the user
+      const exportQuantity = parseInt($("#amount").val());
+
+      // Check if the export quantity is valid
+      if (exportQuantity > 0 && exportQuantity <= parseInt(product.Amount)) {
+        // Update the product's quantity in the warehouse
+        product.Amount = exportQuantity;
+
+        // Close the export dialog
+        $("#AddEditPopup").modal("hide");
+
+        // Show success message (you can replace this with your own alert)
+        alert(`Exported ${exportQuantity} ${product.Name}(s) successfully!`);
+
+        // Update the table to reflect the changes
+        ShowList(list);
+      } else {
+        // Display an error message for an invalid export quantity
+        alert("Invalid export quantity. Please enter a valid quantity.");
+      }
+    });
+  } else {
+    alert("Product not found.");
+  }
 }
 
 // [Exercise 6] Export Process
@@ -362,7 +395,6 @@ $("#FilterInputText").on("input", function () {
 // [Exercise 12] Filter list Action
 $("#FilterStatusDropDownList").change(function () {
   const selectedStatus = $(this).val();
-console.log(selectedStatus, "selectedStatus")
   // Call the filterByStatus function with the selected status
   filterByStatus(selectedStatus);
 });
