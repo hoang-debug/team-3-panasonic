@@ -157,6 +157,27 @@ function updateTotalAmount(list) {
   const totalAmount = calculateTotalAmount(list);
   $("#TotalValue").text(totalAmount); // Update the content of the element with id "TotalValue"
 }
+
+function filterByStatus(selectedStatus) {
+  // Filter the products based on the selected status
+  let filteredList = [];
+  if (selectedStatus === "-1") {
+    // If "All" is selected, show all products
+    filteredList = list;
+  } else {
+    // Otherwise, filter by the selected status (For Sale or Run Out)
+    filteredList = list.filter((item) => {
+      if (selectedStatus === "1") {
+        return Number(item.Amount) > 0;
+      } else {
+        return Number(item.Amount) === 0;
+      }
+    });
+  }
+
+  // Update the table to display the filtered list
+  ShowList(filteredList);
+}
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
@@ -270,13 +291,46 @@ function deleteProduct(id) {
 
 // [Exercise 5] Export Action
 function exportProduct(id) {
-  debugger;
+  // debugger;
 
   CurrentMode = AppMode.EXPORT_MODE;
 
   // Show pop up
   ShowPopup(item1);
-  alert("You must implement this function [Exercise 5]");
+  const product = list.find((item) => item.Id === id);
+  // Check if the product is found
+  if (product) {
+    // Display the export dialog
+    ShowPopup(product);
+
+    // Bind the "Export" button click event
+    $("#SaveButton").off("click").on("click", function (e) {
+      e.preventDefault();
+
+      // Get the export quantity entered by the user
+      const exportQuantity = parseInt($("#amount").val());
+
+      // Check if the export quantity is valid
+      if (exportQuantity > 0 && exportQuantity <= parseInt(product.Amount)) {
+        // Update the product's quantity in the warehouse
+        product.Amount = exportQuantity;
+
+        // Close the export dialog
+        $("#AddEditPopup").modal("hide");
+
+        // Show success message (you can replace this with your own alert)
+        alert(`Exported ${exportQuantity} ${product.Name}(s) successfully!`);
+
+        // Update the table to reflect the changes
+        ShowList(list);
+      } else {
+        // Display an error message for an invalid export quantity
+        alert("Invalid export quantity. Please enter a valid quantity.");
+      }
+    });
+  } else {
+    alert("Product not found.");
+  }
 }
 
 // [Exercise 6] Export Process
@@ -306,13 +360,22 @@ $("#ExportButton").click(function () {
 
 // [Exercise 7] Shipment Action
 $("#ShipButton").click(function () {
+  list = [];
+    
+  // Update the UI and return to the main screen
   $("#AppTitle").text(AppTitleName.STORE_TITLE);
   $("#ExportButton").text(ExportButtonName.NAME_IN_STORE);
   CurrentMode = AppMode.LIST_MODE;
   $("#TotalTitle").hide();
   $("#ShipButton").hide();
   $("#ImportButton").show();
-  // alert("You must implement this function [Exercise 7]");
+  
+  // Clear the table
+  $("#TableList").empty();
+
+  // Update the total amount (it should be 0 after shipment)
+  updateTotalAmount(list);
+
 });
 
 // [Exercise 8] Search Action
@@ -386,6 +449,7 @@ $("#FilterInputText").on("input", function () {
 
 // [Exercise 12] Filter list Action
 $("#FilterStatusDropDownList").change(function () {
-  debugger;
-  alert("You must implement this function [Exercise 12]");
+  const selectedStatus = $(this).val();
+  // Call the filterByStatus function with the selected status
+  filterByStatus(selectedStatus);
 });
