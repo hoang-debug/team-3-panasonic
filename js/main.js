@@ -1,4 +1,10 @@
+var item1 = new Product("001", "2022-11-22", "iPhone X", "Apple", "1300", "30", "Cabinet-10");
+var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
+
 var list = getDataList();
+list.push(item1);
+list.push(item2);
+
 
 //<!-- INIT DISPLAY -->
 $("#TotalTitle").hide();
@@ -134,6 +140,20 @@ function GetTodayWithFormat() {
     ("0" + date.getDate()).slice(-2)
   );
 }
+
+function calculateTotalAmount(list) {
+  let total = 0;
+  for (let i = 0; i < list.length; i++) {
+    total += parseInt(list[i].Amount*list[i].Price);
+  }
+  return total;
+}
+
+// Update the total amount and replace the content of "TotalValue"
+function updateTotalAmount(list) {
+  const totalAmount = calculateTotalAmount(list);
+  $("#TotalValue").text(totalAmount); // Update the content of the element with id "TotalValue"
+}
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
@@ -220,7 +240,7 @@ function exportProduct(id) {
 
 // [Exercise 6] Export Process
 $("#ExportButton").click(function () {
-  debugger;
+  // debugger;
   if (CurrentMode == AppMode.LIST_MODE) {
     // Update list
     $("#AppTitle").text(AppTitleName.EXPORT_TITLE);
@@ -229,6 +249,7 @@ $("#ExportButton").click(function () {
     $("#ImportButton").hide();
     $("#ShipButton").show();
     $("#TotalTitle").show();
+    updateTotalAmount(list);
   } else {
     // Update list
     $("#AppTitle").text(AppTitleName.STORE_TITLE);
@@ -239,7 +260,7 @@ $("#ExportButton").click(function () {
     $("#ShipButton").hide();
   }
   ShowList(list);
-  alert("You must implement this function [Exercise 6]");
+  // alert("You must implement this function [Exercise 6]");
 });
 
 // [Exercise 7] Shipment Action
@@ -250,7 +271,7 @@ $("#ShipButton").click(function () {
   $("#TotalTitle").hide();
   $("#ShipButton").hide();
   $("#ImportButton").show();
-  alert("You must implement this function [Exercise 7]");
+  // alert("You must implement this function [Exercise 7]");
 });
 
 // [Exercise 8] Search Action
