@@ -1,15 +1,15 @@
-var item1 = new Product("001", "2022-11-22", "iPhone X", "Apple", "1300", "30", "Cabinet-10");
-var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
+// var item1 = new Product("001", "2022-11-22", "iPhone X", "Apple", "1300", "30", "Cabinet-10");
+// var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
 
 var list = getDataList("team3");
 list = [];
-setDataList(list, "team3");
+// setDataList(list, "team3");
 
-if (list.length == 0) {
-  list.push(item1);
-  list.push(item2);
-  setDataList(list, "team3");
-}
+// if (list.length == 0) {
+//   list.push(item1);
+//   list.push(item2);
+//   setDataList(list, "team3");
+// }
 //<!-- INIT DISPLAY -->
 $("#TotalTitle").hide();
 $("#ShipButton").hide();
@@ -247,7 +247,7 @@ function editProduct(id) {
   currentId = id;
   CurrentMode = AppMode.EDIT_MODE;
   const indexToDelete = list.findIndex(item => item.Id === id);
-  if (indexToDelete !== -1) {
+  if (indexToDelete === -1) {
     alert("Khong tim thay san pham");
   }
   else{
@@ -395,21 +395,24 @@ $("#PriceSortButton").click(function () {
   debugger;
 
   // sort state
-  switch (CurrentPriceOrder) {
-    case SortOrder.NONE:
-    case SortOrder.DESC:
-      CurrentPriceOrder = SortOrder.ASC;
-      $("#PriceSortIcon").removeClass("fa fa-angle-down");
-      $("#PriceSortIcon").addClass("fa fa-angle-up");
-      break;
-    case SortOrder.ASC:
-      CurrentPriceOrder = SortOrder.DESC;
-      $("#PriceSortIcon").removeClass("fa fa-angle-up");
-      $("#PriceSortIcon").addClass("fa fa-angle-down");
-      break;
+  CurrentPriceOrder = CurrentPriceOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+
+  // Sort the list based on the current sort order
+  if (CurrentPriceOrder === SortOrder.ASC) {
+    list.sort((a, b) => parseFloat(a.Price) - parseFloat(b.Price));
+  } else {
+    list.sort((a, b) => parseFloat(b.Price) - parseFloat(a.Price));
   }
 
-  alert("You must implement this function [Exercise 9]");
+  // Update the table to reflect the sorted order
+  ShowList(list);
+
+  // Update the sort icon
+  if (CurrentPriceOrder === SortOrder.ASC) {
+    $("#PriceSortIcon").removeClass("fa fa-angle-down").addClass("fa fa-angle-up");
+  } else {
+    $("#PriceSortIcon").removeClass("fa fa-angle-up").addClass("fa fa-angle-down");
+  }
 });
 
 // [Exercise 10] Sort Date Action
