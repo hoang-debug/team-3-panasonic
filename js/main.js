@@ -247,7 +247,7 @@ function editProduct(id) {
   currentId = id;
   CurrentMode = AppMode.EDIT_MODE;
   const indexToDelete = list.findIndex(item => item.Id === id);
-  if (indexToDelete !== -1) {
+  if (indexToDelete === -1) {
     alert("Khong tim thay san pham");
   }
   else{
@@ -415,7 +415,7 @@ $("#PriceSortButton").click(function () {
 // [Exercise 10] Sort Date Action
 $("#DateSortButton").click(function () {
   debugger;
-
+  list = getDataList("team3");
   // sort state
   switch (CurrentDateOrder) {
     case SortOrder.NONE:
@@ -423,15 +423,17 @@ $("#DateSortButton").click(function () {
       CurrentDateOrder = SortOrder.ASC;
       $("#DateSortIcon").removeClass("fa fa-angle-down");
       $("#DateSortIcon").addClass("fa fa-angle-up");
-      
+      list.sort((a, b) => (a.Date < b.Date) ? 1 : -1);
       break;
     case SortOrder.ASC:
       CurrentDateOrder = SortOrder.DESC;
       $("#DateSortIcon").removeClass("fa fa-angle-up");
       $("#DateSortIcon").addClass("fa fa-angle-down");
+      list.sort((a, b) => (a.Date > b.Date) ? 1 : -1);
       break;
   }
-
+  ShowList(list);
+  setDataList(list, "team3");
   // alert("You must implement this function [Exercise 10]");
 });
 
