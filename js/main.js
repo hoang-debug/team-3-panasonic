@@ -2,7 +2,7 @@
 // var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
 
 var list = getDataList("team3");
-list = [];
+// list = [];
 // setDataList(list, "team3");
 
 // if (list.length == 0) {
@@ -248,7 +248,7 @@ function editProduct(id) {
   CurrentMode = AppMode.EDIT_MODE;
   const indexToDelete = list.findIndex(item => item.Id === id);
   if (indexToDelete === -1) {
-    alert("Khong tim thay san pham");
+    alert("Product not found");
   }
   else{
     ShowPopup(list[indexToDelete]);
@@ -295,8 +295,9 @@ function exportProduct(id) {
   CurrentMode = AppMode.EXPORT_MODE;
 
   // Show pop up
-  ShowPopup(item1);
+  // ShowPopup(item1);
   const product = list.find((item) => item.Id === id);
+
   // Check if the product is found
   if (product) {
     // Display the export dialog
@@ -312,13 +313,10 @@ function exportProduct(id) {
       // Check if the export quantity is valid
       if (exportQuantity > 0 && exportQuantity <= parseInt(product.Amount)) {
         // Update the product's quantity in the warehouse
-        product.Amount = exportQuantity;
+        product.Amount -= exportQuantity;
 
         // Close the export dialog
         $("#AddEditPopup").modal("hide");
-
-        // Show success message (you can replace this with your own alert)
-        alert(`Exported ${exportQuantity} ${product.Name}(s) successfully!`);
 
         // Update the table to reflect the changes
         ShowList(list);
