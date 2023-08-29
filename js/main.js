@@ -154,6 +154,27 @@ function updateTotalAmount(list) {
   const totalAmount = calculateTotalAmount(list);
   $("#TotalValue").text(totalAmount); // Update the content of the element with id "TotalValue"
 }
+
+function filterByStatus(selectedStatus) {
+  // Filter the products based on the selected status
+  let filteredList = [];
+  if (selectedStatus === "-1") {
+    // If "All" is selected, show all products
+    filteredList = list;
+  } else {
+    // Otherwise, filter by the selected status (For Sale or Run Out)
+    filteredList = list.filter((item) => {
+      if (selectedStatus === "1") {
+        return Number(item.Amount) > 0;
+      } else {
+        return Number(item.Amount) === 0;
+      }
+    });
+  }
+
+  // Update the table to display the filtered list
+  ShowList(filteredList);
+}
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
@@ -265,13 +286,22 @@ $("#ExportButton").click(function () {
 
 // [Exercise 7] Shipment Action
 $("#ShipButton").click(function () {
+  list = [];
+    
+  // Update the UI and return to the main screen
   $("#AppTitle").text(AppTitleName.STORE_TITLE);
   $("#ExportButton").text(ExportButtonName.NAME_IN_STORE);
   CurrentMode = AppMode.LIST_MODE;
   $("#TotalTitle").hide();
   $("#ShipButton").hide();
   $("#ImportButton").show();
-  // alert("You must implement this function [Exercise 7]");
+  
+  // Clear the table
+  $("#TableList").empty();
+
+  // Update the total amount (it should be 0 after shipment)
+  updateTotalAmount(list);
+
 });
 
 // [Exercise 8] Search Action
@@ -331,6 +361,8 @@ $("#FilterInputText").on("input", function () {
 
 // [Exercise 12] Filter list Action
 $("#FilterStatusDropDownList").change(function () {
-  debugger;
-  alert("You must implement this function [Exercise 12]");
+  const selectedStatus = $(this).val();
+console.log(selectedStatus, "selectedStatus")
+  // Call the filterByStatus function with the selected status
+  filterByStatus(selectedStatus);
 });
