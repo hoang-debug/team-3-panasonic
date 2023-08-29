@@ -178,11 +178,33 @@ function editProduct(id) {
 function deleteProduct(id) {
   // debugger;
   let text = "Are you sure to delete?";
-  if (!confirm(text)) {
-    return 0;
-  }
+  // if (!confirm(text)) {
+  //   return 0;
+  // }
+ // Find the index of the product with the given ID in the list
+ const indexToDelete = list.findIndex(item => item.Id === id);
 
-  alert("You must implement this function [Exercise 4]");
+ // Check if the product was found
+ if (indexToDelete !== -1) {
+   // Ask the user for confirmation before deleting
+   if (confirm(text)) {
+     // Remove the product from the list
+     list.splice(indexToDelete, 1);
+
+     // Update the table with the new data
+     ShowList(list);
+
+     // Update the data in localStorage
+     setDataList(list, "team3"); // Update the data in localStorage with the key "team3"
+
+     // Optionally, you can display a success message
+     alert("Product deleted successfully!");
+   }
+ } else {
+   // Product not found, you can display an error message or handle it as needed
+   alert("Product not found.");
+ }
+  // alert("You must implement this function [Exercise 4]");
 }
 
 // [Exercise 5] Export Action
