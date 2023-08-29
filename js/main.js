@@ -1,5 +1,15 @@
-var list = getDataList("team3");
+var item1 = new Product("001", "2022-11-22", "iPhone X", "Apple", "1300", "30", "Cabinet-10");
+var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
 
+var list = getDataList("team3");
+list = [];
+setDataList(list, "team3");
+
+if (list.length == 0) {
+  list.push(item1);
+  list.push(item2);
+  setDataList(list, "team3");
+}
 //<!-- INIT DISPLAY -->
 $("#TotalTitle").hide();
 $("#ShipButton").hide();
@@ -133,6 +143,20 @@ function GetTodayWithFormat() {
     ("0" + date.getDate()).slice(-2)
   );
 }
+
+function calculateTotalAmount(list) {
+  let total = 0;
+  for (let i = 0; i < list.length; i++) {
+    total += parseInt(list[i].Amount*list[i].Price);
+  }
+  return total;
+}
+
+// Update the total amount and replace the content of "TotalValue"
+function updateTotalAmount(list) {
+  const totalAmount = calculateTotalAmount(list);
+  $("#TotalValue").text(totalAmount); // Update the content of the element with id "TotalValue"
+}
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
@@ -143,36 +167,54 @@ $("#ImportButton").click(function (e) {
   ShowPopup();
   // alert("You must implement this function [Exercise 1]");
 });
-
+function changeExistedItem(name, maker, price, amount, location) {
+  var list = getDataList("team3");
+  list.forEach(element => {
+    if (element.Name == name && element.Maker == maker && element.Price == price && element.Location == location) {
+      element.amount = amount
+      return true;
+    }
+  });
+  return false;
+}
 // [Exercise 2] Save Action
 $("#SaveButton").click(function (e) {
   e.preventDefault();
   list = getDataList("team3");
   debugger;
-  if (CurrentMode == AppMode.EDIT_MODE) {
-    item1 = list.find(item => item.id === currentId);
-    item1.Date = $("#date").val();
-    item1.Name = $("#name").val();
-    item1.Maker = $("#maker").val();
-    item1.Price = $("#price").val();
-    item1.Amount = $("#amount").val();
-    item1.Location = $("#location").val();
-
+  if ($("#name").val() == "" || $("#maker").val() == "") {
+    alert("Name and Maker are required fields!");
+    return;
   }
-  else {
-    generateUniqueId();
-    var dateValue = $("#date").val();
-    var nameValue = $("#name").val();
-    var makerValue = $("#maker").val();
-    var priceValue = $("#price").val();
-    var amountValue = $("#amount").val();
-    var locationValue = $("#location").val();
-
-    const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
-    // alert("You must implement this function [Exercise 2]");
-    list.push(product)
+  if (parseInt($("#price").val()) < 0  && parseInt($("#amount").val()) < 0) {
+    alert("Price and Amount must be greater than 0!");
+    return;
   }
+  let existedElement = changeExistedItem($("#name").val(), $("#maker").val(), $("#price").val(), $("#amount").val(), $("#location").val());
+  if (!existedElement) {
+    if (CurrentMode == AppMode.EDIT_MODE) {
+      item1 = list.find(item => item.Id === currentId);
+      item1.Date = $("#date").val();
+      item1.Name = $("#name").val();
+      item1.Maker = $("#maker").val();
+      item1.Price = $("#price").val();
+      item1.Amount = $("#amount").val();
+      item1.Location = $("#location").val();
+    }
+    else {
+      generateUniqueId();
+      var dateValue = $("#date").val();
+      var nameValue = $("#name").val();
+      var makerValue = $("#maker").val();
+      var priceValue = $("#price").val();
+      var amountValue = $("#amount").val();
+      var locationValue = $("#location").val();
   
+      const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
+      // alert("You must implement this function [Exercise 2]");
+      list.push(product)
+    }
+  }
   ShowList(list);
   setDataList(list, "team3")
 });
@@ -184,19 +226,46 @@ function editProduct(id) {
   debugger;
   currentId = id;
   CurrentMode = AppMode.EDIT_MODE;
-  let itemIndex = list.findIndex(item => item.id === id);
-  ShowPopup(list[itemIndex]);
+  const indexToDelete = list.findIndex(item => item.Id === id);
+  if (indexToDelete !== -1) {
+    alert("Khong tim thay san pham");
+  }
+  else{
+    ShowPopup(list[indexToDelete]);
+  }
 }
 
 // [Exercise 4] Delete Action
 function deleteProduct(id) {
   // debugger;
   let text = "Are you sure to delete?";
-  if (!confirm(text)) {
-    return 0;
-  }
+  // if (!confirm(text)) {
+  //   return 0;
+  // }
+ // Find the index of the product with the given ID in the list
+ const indexToDelete = list.findIndex(item => item.Id === id);
 
-  alert("You must implement this function [Exercise 4]");
+ // Check if the product was found
+ if (indexToDelete !== -1) {
+   // Ask the user for confirmation before deleting
+   if (confirm(text)) {
+     // Remove the product from the list
+     list.splice(indexToDelete, 1);
+
+     // Update the table with the new data
+     ShowList(list);
+
+     // Update the data in localStorage
+     setDataList(list, "team3"); // Update the data in localStorage with the key "team3"
+
+     // Optionally, you can display a success message
+     alert("Product deleted successfully!");
+   }
+ } else {
+   // Product not found, you can display an error message or handle it as needed
+   alert("Product not found.");
+ }
+  // alert("You must implement this function [Exercise 4]");
 }
 
 // [Exercise 5] Export Action
@@ -212,7 +281,7 @@ function exportProduct(id) {
 
 // [Exercise 6] Export Process
 $("#ExportButton").click(function () {
-  debugger;
+  // debugger;
   if (CurrentMode == AppMode.LIST_MODE) {
     // Update list
     $("#AppTitle").text(AppTitleName.EXPORT_TITLE);
@@ -221,6 +290,7 @@ $("#ExportButton").click(function () {
     $("#ImportButton").hide();
     $("#ShipButton").show();
     $("#TotalTitle").show();
+    updateTotalAmount(list);
   } else {
     // Update list
     $("#AppTitle").text(AppTitleName.STORE_TITLE);
@@ -231,7 +301,7 @@ $("#ExportButton").click(function () {
     $("#ShipButton").hide();
   }
   ShowList(list);
-  alert("You must implement this function [Exercise 6]");
+  // alert("You must implement this function [Exercise 6]");
 });
 
 // [Exercise 7] Shipment Action
@@ -242,13 +312,20 @@ $("#ShipButton").click(function () {
   $("#TotalTitle").hide();
   $("#ShipButton").hide();
   $("#ImportButton").show();
-  alert("You must implement this function [Exercise 7]");
+  // alert("You must implement this function [Exercise 7]");
 });
 
 // [Exercise 8] Search Action
 $("#SearchButton").click(function () {
-  debugger;
-  alert("You must implement this function [Exercise 8]");
+  // debugger;
+  // alert("You must implement this function [Exercise 8]");
+  const keyword = $("#keySearch").val().toLowerCase().trim();
+  const baseList = getDataList("team3");
+  list = $.grep(baseList, function(item) {
+    return item.Name.toLowerCase().includes(keyword) || item.Maker.toLowerCase().includes(keyword);
+  });
+  ShowList(list);
+  list = baseList;
 });
 
 // [Exercise 9] Sort Price Action
@@ -297,7 +374,14 @@ $("#DateSortButton").click(function () {
 // [Exercise 11] Filter text Action
 $("#FilterInputText").on("input", function () {
   debugger;
-  alert("You must implement this function [Exercise 11]");
+  // alert("You must implement this function [Exercise 11]");
+  const keyword = $("#FilterInputText").val().toLowerCase().trim();
+  const baseList = getDataList("team3");
+  list = $.grep(baseList, function(item) {
+    return item.Name.toLowerCase().includes(keyword) || item.Maker.toLowerCase().includes(keyword);
+  });
+  ShowList(list);
+  list = baseList;
 });
 
 // [Exercise 12] Filter list Action
