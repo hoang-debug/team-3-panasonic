@@ -1,9 +1,4 @@
-var item1 = new Product("001", "2022-11-22", "iPhone X", "Apple", "1300", "30", "Cabinet-10");
-var item2 = new Product("002", "2022-11-23", "Note 23", "Samsung", "1500", "6", "Cabinet-8");
-
 var list = getDataList();
-list.push(item1);
-list.push(item2);
 
 //<!-- INIT DISPLAY -->
 $("#TotalTitle").hide();
@@ -11,7 +6,14 @@ $("#ShipButton").hide();
 
 // Update list
 ShowList(list);
+function generateUniqueId() {
+  // Generate a unique ID based on the current timestamp and a random number
+  const timestamp = Date.now();
+  const randomNum = Math.floor(Math.random() * 10000); // Adjust as needed
+  const uniqueId = `${timestamp}-${randomNum}`;
 
+  return uniqueId;
+}
 //<!-- SHOW TABLE -->
 function ShowList(list) {
   debugger;
@@ -128,12 +130,6 @@ function GetTodayWithFormat() {
     ("0" + date.getDate()).slice(-2)
   );
 }
-var dateValue;
-var nameValue;
-var makerValue;
-var priceValue;
-var amountValue;
-var locationValue;
 //<!-- ACTIONS -->
 // [Exercise 1] Import Action
 $("#ImportButton").click(function (e) {
@@ -156,10 +152,11 @@ $("#SaveButton").click(function (e) {
   var amountValue = $("#amount").val();
   var locationValue = $("#location").val();
 
-  const product = new Product(1, dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
+  const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
   // alert("You must implement this function [Exercise 2]");
   list.push(product)
   ShowList(list);
+  setDataList(list, "team3")
 });
 
 // [Exercise 3] Edit Action
