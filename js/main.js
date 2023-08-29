@@ -190,13 +190,13 @@ $("#ImportButton").click(function (e) {
 });
 function changeExistedItem(name, maker, price, amount, location) {
   var list = getDataList("team3");
-  list.forEach(element => {
+  const founded = list.forEach(element => {
     if (element.Name == name && element.Maker == maker && element.Price == price && element.Location == location) {
       element.amount = amount
-      return true;
+      return element;
     }
   });
-  return false;
+  return founded;
 }
 // [Exercise 2] Save Action
 $("#SaveButton").click(function (e) {
@@ -211,30 +211,29 @@ $("#SaveButton").click(function (e) {
     alert("Price and Amount must be greater than 0!");
     return;
   }
-  let existedElement = changeExistedItem($("#name").val(), $("#maker").val(), $("#price").val(), $("#amount").val(), $("#location").val());
-  if (!existedElement) {
-    if (CurrentMode == AppMode.EDIT_MODE) {
-      item1 = list.find(item => item.Id === currentId);
-      item1.Date = $("#date").val();
-      item1.Name = $("#name").val();
-      item1.Maker = $("#maker").val();
-      item1.Price = $("#price").val();
-      item1.Amount = $("#amount").val();
-      item1.Location = $("#location").val();
-    }
-    else {
-      generateUniqueId();
-      var dateValue = $("#date").val();
-      var nameValue = $("#name").val();
-      var makerValue = $("#maker").val();
-      var priceValue = $("#price").val();
-      var amountValue = $("#amount").val();
-      var locationValue = $("#location").val();
-  
-      const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
-      // alert("You must implement this function [Exercise 2]");
-      list.push(product)
-    }
+  // let existedElement = changeExistedItem($("#name").val(), $("#maker").val(), $("#price").val(), $("#amount").val(), $("#location").val());
+  // if (!existedElement) {
+  if (CurrentMode == AppMode.EDIT_MODE) {
+    item1 = list.find(item => item.Id === currentId);
+    item1.Date = $("#date").val();
+    item1.Name = $("#name").val();
+    item1.Maker = $("#maker").val();
+    item1.Price = $("#price").val();
+    item1.Amount = $("#amount").val();
+    item1.Location = $("#location").val();
+  }
+  else {
+    generateUniqueId();
+    var dateValue = $("#date").val();
+    var nameValue = $("#name").val();
+    var makerValue = $("#maker").val();
+    var priceValue = $("#price").val();
+    var amountValue = $("#amount").val();
+    var locationValue = $("#location").val();
+
+    const product = new Product(generateUniqueId(), dateValue, nameValue, makerValue, priceValue, amountValue, locationValue)
+    // alert("You must implement this function [Exercise 2]");
+    list.push(product)
   }
   ShowList(list);
   setDataList(list, "team3")
@@ -424,6 +423,7 @@ $("#DateSortButton").click(function () {
       CurrentDateOrder = SortOrder.ASC;
       $("#DateSortIcon").removeClass("fa fa-angle-down");
       $("#DateSortIcon").addClass("fa fa-angle-up");
+      
       break;
     case SortOrder.ASC:
       CurrentDateOrder = SortOrder.DESC;
@@ -431,7 +431,8 @@ $("#DateSortButton").click(function () {
       $("#DateSortIcon").addClass("fa fa-angle-down");
       break;
   }
-  alert("You must implement this function [Exercise 10]");
+
+  // alert("You must implement this function [Exercise 10]");
 });
 
 // [Exercise 11] Filter text Action
